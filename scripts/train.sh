@@ -1,13 +1,13 @@
 #!/bin/bash
 # model_type: qwen2vl or qwen25vl
-model_type="qwen2vl"
-llm_model="./checkpoints/${model_type}_warmup"
-output_dir="./checkpoints/${model_type}_sft"
+model_type="qwen25vl"
+llm_model="../checkpoints/${model_type}_warmup"
+output_dir="../checkpoints/${model_type}_sft"
 
 # === Training Command ===
-torchrun --nproc_per_node=4 train.py \
+torchrun --nproc_per_node=4 ./train.py \
   --deepspeed ./scripts/zero3.json \
-  --data_path data/data_config.yaml \
+  --data_path ./data/data_config.yaml \
   --image_folder "" \
   --model_type ${model_type} \
   --model_name_or_path ${llm_model} \
@@ -27,10 +27,10 @@ torchrun --nproc_per_node=4 train.py \
   --lr_scheduler_type "cosine" \
   --logging_steps 10 \
   --tf32 True \
-  --model_max_length 24576 \
+  --model_max_length 10240 \
   --gradient_checkpointing True \
   --dataloader_num_workers 8 \
-  --max_pixels 5720064 \
+  --max_pixels 1048576 \
   --unfreeze_all_parameters True \
   --unfreeze_pointer_head False \
   --unfreeze_lm_head False \
